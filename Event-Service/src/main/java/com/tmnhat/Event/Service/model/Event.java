@@ -14,103 +14,101 @@ public class Event {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    //Constructor
-    public Event(Long id, String eventName, String description, String location, LocalDateTime date, Integer availableTickets, Double ticketPrice, Boolean isHotEvent, LocalDateTime createdAt, LocalDateTime updateAt) {
-        this.id = id;
-        this.eventName = eventName;
-        this.description = description;
-        this.location = location;
-        this.date = date;
-        this.availableTickets = availableTickets;
-        this.ticketPrice = ticketPrice;
-        this.isHotEvent = isHotEvent;
-        this.createdAt = createdAt;
-        this.updatedAt = updateAt;
+    private Event(Builder builder) {
+        this.id = builder.id;
+        this.eventName = builder.eventName;
+        this.description = builder.description;
+        this.location = builder.location;
+        this.date = builder.date;
+        this.availableTickets = builder.availableTickets;
+        this.ticketPrice = builder.ticketPrice;
+        this.isHotEvent = builder.isHotEvent;
+        this.createdAt = builder.createdAt;
+        this.updatedAt = builder.updatedAt;
     }
-    public Event(){
+    private Event(){
 
-    }
-    //Getter , Setter
-
-    public Long getId() {
-        return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // Getters
+    public Long getId() { return id; }
+    public String getEventName() { return eventName; }
+    public String getDescription() { return description; }
+    public String getLocation() { return location; }
+    public LocalDateTime getDate() { return date; }
+    public Integer getAvailableTickets() { return availableTickets; }
+    public Double getTicketPrice() { return ticketPrice; }
+    public Boolean getIsHotEvent() { return isHotEvent; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    // Builder Class
+    public static class Builder {
+        private Long id;
+        private String eventName;
+        private String description;
+        private String location;
+        private LocalDateTime date;
+        private Integer availableTickets;
+        private Double ticketPrice;
+        private Boolean isHotEvent;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public Builder() {}
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder eventName(String eventName) {
+            this.eventName = eventName;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder location(String location) {
+            this.location = location;
+            return this;
+        }
+
+        public Builder date(LocalDateTime date) {
+            this.date = date;
+            return this;
+        }
+
+        public Builder availableTickets(Integer availableTickets) {
+            this.availableTickets = availableTickets;
+            return this;
+        }
+
+        public Builder ticketPrice(Double ticketPrice) {
+            this.ticketPrice = ticketPrice;
+            return this;
+        }
+
+        public Builder isHotEvent(Boolean isHotEvent) {
+            this.isHotEvent = isHotEvent;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder updatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public Event build() {
+            return new Event(this);
+        }
     }
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public Integer getAvailableTickets() {
-        return availableTickets;
-    }
-
-    public void setAvailableTickets(Integer availableTickets) {
-        this.availableTickets = availableTickets;
-    }
-
-    public Double getTicketPrice() {
-        return ticketPrice;
-    }
-
-    public void setTicketPrice(Double ticketPrice) {
-        this.ticketPrice = ticketPrice;
-    }
-
-    public Boolean getIsHotEvent() {
-        return isHotEvent;
-    }
-
-    public void setIsHotEvent(Boolean hotEvent) {
-        isHotEvent = hotEvent;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdateAt() {
-        return updatedAt;
-    }
-
-    public void setUpdateAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-
 }

@@ -2,6 +2,7 @@ package com.tmnhat.Event.Service.controller;
 
 import com.tmnhat.Event.Service.model.Event;
 import com.tmnhat.Event.Service.service.EventService;
+import com.tmnhat.Event.Service.service.Impl.EventServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/events")
 public class EventController {
-    private final EventService eventService = new EventService();
+    private final EventService eventService;
+    // Nếu đổi các phương thức, chỉ cần đổi class impl
+    public EventController() {
+        this.eventService = new EventServiceImpl(); // Khởi tạo service
+    }
 
     @GetMapping()
     public ResponseEntity<List<Event>> getAllEvents() {
@@ -37,6 +42,11 @@ public class EventController {
     public ResponseEntity<String> addEvent(@RequestBody Event event) throws SQLException {
         eventService.addEvent(event);
         return ResponseEntity.ok("Thêm thành công");
+    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> updateEvent(@PathVariable("id") Long id,@RequestBody Event event) throws SQLException {
+        eventService.updateEvent(id,event);
+        return ResponseEntity.ok("Cập nhật thành công");
     }
 
     @DeleteMapping("/{id}")
