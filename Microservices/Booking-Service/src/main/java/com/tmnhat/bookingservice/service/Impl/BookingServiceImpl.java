@@ -5,12 +5,16 @@ import com.tmnhat.bookingservice.repository.BookingDAO;
 import com.tmnhat.bookingservice.service.BookingService;
 import com.tmnhat.common.exception.DatabaseException;
 import com.tmnhat.common.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class BookingServiceImpl implements BookingService {
-    private BookingDAO bookingDao = new BookingDAO();
+    @Autowired
+    private BookingDAO bookingDao;
 
     @Override
     public void saveBooking(Booking booking) {

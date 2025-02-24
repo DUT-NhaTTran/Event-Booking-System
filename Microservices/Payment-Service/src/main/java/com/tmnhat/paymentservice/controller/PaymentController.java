@@ -5,6 +5,7 @@ import com.tmnhat.paymentservice.model.Payment;
 import com.tmnhat.paymentservice.service.Impl.PaymentServiceImpl;
 import com.tmnhat.paymentservice.service.PaymentService;
 import com.tmnhat.paymentservice.validation.PaymentValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +14,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
-    private final PaymentService paymentService;
+    private final PaymentServiceImpl paymentService;
 
-    public PaymentController() {
-        this.paymentService = new PaymentServiceImpl();
+    @Autowired
+    public PaymentController(PaymentServiceImpl paymentService) {
+        this.paymentService = paymentService;
     }
 
-    // ✅ Lấy trạng thái thanh toán theo `bookingId`
+    // Lấy trạng thái thanh toán theo `bookingId`
     @GetMapping("/status/{bookingId}")
     public ResponseEntity<ResponseDataAPI> getPaymentStatus(@PathVariable Long bookingId) {
         PaymentValidator.validateId(bookingId); // Kiểm tra ID hợp lệ
@@ -32,7 +34,7 @@ public class PaymentController {
         }
     }
 
-    // ✅ Thêm thanh toán mới (Kiểm tra dữ liệu hợp lệ)
+    // Thêm thanh toán mới (Kiểm tra dữ liệu hợp lệ)
     @PostMapping()
     public ResponseEntity<ResponseDataAPI> savePayment(@RequestBody Payment payment) {
         PaymentValidator.validatePayment(payment); // Kiểm tra dữ liệu đầu vào
@@ -40,7 +42,7 @@ public class PaymentController {
         return ResponseEntity.ok(ResponseDataAPI.successWithoutMetaAndData());
     }
 
-    // ✅ Cập nhật thông tin thanh toán (Kiểm tra ID & dữ liệu hợp lệ)
+    // Cập nhật thông tin thanh toán (Kiểm tra ID & dữ liệu hợp lệ)
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDataAPI> updatePayment(@PathVariable("id") Long id, @RequestBody Payment payment) {
         PaymentValidator.validateId(id); // Kiểm tra ID hợp lệ

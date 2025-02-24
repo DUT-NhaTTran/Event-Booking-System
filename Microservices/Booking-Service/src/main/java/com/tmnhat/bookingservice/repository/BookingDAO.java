@@ -7,6 +7,7 @@ import com.tmnhat.bookingservice.model.Booking;
 import com.tmnhat.bookingservice.rabbitmq.RabbitMQProducer;
 import com.tmnhat.common.exception.DatabaseException;
 import com.tmnhat.common.exception.ResourceNotFoundException;
+import org.springframework.stereotype.Component;
 
 
 import java.nio.charset.StandardCharsets;
@@ -15,12 +16,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class BookingDAO extends BaseDAO {
     //Đặt vé
 
     public void saveBooking(Booking booking) {
         String saveBookingSQL = "INSERT INTO booking (booking_name, event_id, user_id, ticket_count, status, created_at) VALUES (?, ?, ?, ?, ?, ?)";
-
         try {
             long bookingId = executeUpdateWithGeneratedKeys(saveBookingSQL, stmt -> {
                 stmt.setString(1, booking.getBookingName());
@@ -28,26 +29,42 @@ public class BookingDAO extends BaseDAO {
                 stmt.setLong(3, booking.getUserId());
                 stmt.setInt(4, booking.getTicketCount());
                 stmt.setString(5, "PENDING"); // Trạng thái mặc định
-                stmt.setTimestamp(6, booking.getCreatedAt() != null ? Timestamp.valueOf(booking.getCreatedAt()) : Timestamp.valueOf(LocalDateTime.now()));
+                stmt.setTimestamp(6, booking.getCreatedAt() != null
+                        ? Timestamp.valueOf(booking.getCreatedAt())
+                        : Timestamp.valueOf(LocalDateTime.now()));
             });
 
             if (bookingId > 0) {
                 booking.setId(bookingId);
+                // Booking được thêm thành công, tiến hành gửi message đến Payment Service
+                try {
+                    sendBookingToPayment(booking);
+                } catch (Exception e) {
+                    System.err.println("Failed to send booking to Payment Service: " + e.getMessage());
+                    e.printStackTrace();
+                    rollbackBooking(booking);
+                }
             } else {
                 throw new DatabaseException("Failed to save booking: No ID returned");
-            }
-
-            try {
-                sendBookingToPayment(booking);
-            } catch (Exception e) {
-                System.err.println("Failed to send booking to Payment Service: " + e.getMessage());
-                e.printStackTrace();
             }
         } catch (SQLException e) {
             throw new DatabaseException("Error saving booking: " + e.getMessage());
         }
     }
-
+    private void rollbackBooking(Booking booking) {
+        // Cập nhật trạng thái booking thành FAILED trong cơ sở dữ liệu
+        try {
+            String updateSQL = "UPDATE booking SET status = ? WHERE id = ?";
+            // Thực hiện update trạng thái booking thành FAILED
+            executeUpdate(updateSQL, stmt -> {
+                stmt.setString(1, "FAILED");
+                stmt.setLong(2, booking.getId());
+            });
+            System.out.println("Booking rolled back (status set to FAILED) for booking id: " + booking.getId());
+        } catch (Exception e) {
+            throw new DatabaseException("Error rolling back booking: " + e.getMessage());
+        }
+    }
 
     public void sendBookingToPayment(Booking booking) {
         try {

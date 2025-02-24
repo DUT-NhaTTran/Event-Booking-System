@@ -7,11 +7,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Booking-Service" />
-        <module name="Event-Service" />
         <module name="User-Service (2)" />
+        <module name="Event-Service" />
+        <module name="Ticket-Service" />
+        <module name="Payment-Service" />
+        <module name="Microservices" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="Booking-Service.main" target="17" />
+      <module name="Booking-Service.test" target="17" />
       <module name="User-Service" target="21" />
     </bytecodeTargetLevel>
   </component>
@@ -19,6 +24,9 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Booking-Service" options="-parameters" />
       <module name="Event-Service" options="-parameters" />
+      <module name="Microservices" options="-parameters" />
+      <module name="Payment-Service" options="-parameters" />
+      <module name="Ticket-Service" options="-parameters" />
       <module name="User-Service" options="-parameters" />
       <module name="User-Service (2)" options="-parameters" />
     </option>

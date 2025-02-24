@@ -4,6 +4,7 @@ import com.tmnhat.bookingservice.model.Booking;
 import com.tmnhat.common.exception.DatabaseException;
 import com.tmnhat.common.exception.ResourceNotFoundException;
 import com.tmnhat.paymentservice.model.Payment;
+import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class PaymentDAO extends BaseDAO {
     public void savePayment(Payment payment) {
         String savePayment = "INSERT INTO payment (booking_id,user_id,amount,status,created_at) VALUES (?,?,?,?,?)";

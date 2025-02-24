@@ -51,6 +51,7 @@ public class UserDAO extends BaseDAO {
     public Users getUserById(Long id) throws SQLException {
         String getUserById="SELECT * FROM users WHERE id=?";
         return executeQuery(getUserById,stmt->{
+            stmt.setLong(1,id);
             ResultSet rs=stmt.executeQuery();
             if(rs.next()){
                 return new Users.Builder()

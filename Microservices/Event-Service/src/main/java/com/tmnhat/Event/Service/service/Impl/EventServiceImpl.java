@@ -6,14 +6,19 @@ import com.tmnhat.Event.Service.repository.EventDAO;
 import com.tmnhat.Event.Service.service.EventService;
 import com.tmnhat.common.exception.DatabaseException;
 import com.tmnhat.common.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class EventServiceImpl implements EventService {
-    private final EventDAO eventDAO=new EventDAO();
-    private final EventCacheService eventCacheService= new EventCacheService();
+    @Autowired
+    private EventDAO eventDAO;
+//    private final EventCacheService eventCacheService= new EventCacheService();
+    @Autowired
+    private EventCacheService eventCacheService;
 
     @Override
     public void addEvent(Event event) {
@@ -80,23 +85,24 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+
     @Override
     public void deleteEvent(Long id) {
         try {
             Optional<Event> cachedEvent = eventCacheService.getHotEvent(id);
             if (cachedEvent.isPresent()) {
                 eventCacheService.removeHotEvent(id);
-            } else {
-                Event existingEvent = getEventById(id);
-                eventDAO.deleteEvent(id);
             }
+
+            // Xóa trong Postgres
+            eventDAO.deleteEvent(id);
+
         } catch (ResourceNotFoundException e) {
             throw new ResourceNotFoundException("Event with ID " + id + " not found");
         } catch (Exception e) {
             throw new DatabaseException("Error deleting event with ID " + id + ": " + e.getMessage());
         }
     }
-
     @Override
     public List<Event> getAllHotEvents() {
         return eventCacheService.getAllHotEvents();

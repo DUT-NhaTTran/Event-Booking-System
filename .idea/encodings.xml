@@ -5,6 +5,9 @@
     <file url="file://$PROJECT_DIR$/Booking-Service/src/main/kotlin" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Booking-Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Event-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Microservices/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Payment-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Ticket-Service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/User Service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/User-Service/src/main/java" charset="UTF-8" />
   </component>

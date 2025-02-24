@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
 import com.tmnhat.bookingservice.model.Booking;
+import com.tmnhat.common.config.RabbitMQConfig;
 import com.tmnhat.common.config.RabbitMQConnection;
 import com.tmnhat.paymentservice.service.Impl.PaymentServiceImpl;
 import com.tmnhat.paymentservice.service.PaymentService;
@@ -12,24 +13,37 @@ import com.tmnhat.paymentservice.service.PaymentService;
 import java.nio.charset.StandardCharsets;
 
 public class RabbitMQConsumer {
+    private final String queueName;
+    private final RabbitMQConfig config;
+    private final ObjectMapper objectMapper;
+    private final Channel channel;
 
-    private static final String QUEUE_NAME = "payment_queue";
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final Channel channel = RabbitMQConnection.getChannel();
+    public RabbitMQConsumer() {
+        config = new RabbitMQConfig();
+        this.queueName = config.getPaymentQueue();
+
+
+        // Khởi tạo ObjectMapper và đăng ký module hỗ trợ LocalDateTime
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        // Lấy channel từ RabbitMQConnection
+        channel = RabbitMQConnection.getChannel();
+    }
+
+
     private final PaymentService paymentService = new PaymentServiceImpl();
 
-    static {
-        objectMapper.registerModule(new JavaTimeModule()); // Fix lỗi LocalDateTime
-    }
+
 
     public void processPaymentQueue() {
         try {
             if (channel == null) {
-                System.err.println("❌ Failed to get RabbitMQ channel.");
+                System.err.println("Failed to get RabbitMQ channel.");
                 return;
             }
 
-            channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+            channel.queueDeclare(queueName, true, false, false, null);
             System.out.println("Waiting for messages from Booking Service...");
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
@@ -47,7 +61,7 @@ public class RabbitMQConsumer {
                 }
             };
 
-            channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {});
+            channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
 
         } catch (Exception e) {
             System.err.println("RabbitMQ Consumer error: " + e.getMessage());

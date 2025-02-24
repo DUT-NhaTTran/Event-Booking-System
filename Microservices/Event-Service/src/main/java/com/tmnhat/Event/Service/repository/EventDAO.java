@@ -3,17 +3,21 @@ package com.tmnhat.Event.Service.repository;
 import com.tmnhat.Event.Service.model.Event;
 import com.tmnhat.common.exception.DatabaseException;
 import com.tmnhat.common.exception.ResourceNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class EventDAO extends BaseDAO {
 
     public Long addEventAndReturnId(Event event) {
-        String addEventSQL = "INSERT INTO events (event_name, description, location, date, available_tickets, ticket_price, is_hot_event, created_at, updated_at) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
+        String addEventSQL = """
+                INSERT INTO events 
+                (event_name, description, location, date, available_tickets, ticket_price, is_hot_event, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+                """;
 
         try {
             return executeQuery(addEventSQL, stmt -> {
