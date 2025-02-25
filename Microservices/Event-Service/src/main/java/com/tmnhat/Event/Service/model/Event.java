@@ -8,11 +8,6 @@ public class Event {
     private String description;
     private String location;
     private LocalDateTime date;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     private Integer availableTickets;
     private Double ticketPrice;
     private Boolean isHotEvent;
@@ -46,19 +41,57 @@ public class Event {
     public Boolean getIsHotEvent() { return isHotEvent; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+    //Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public void setAvailableTickets(Integer availableTickets) {
+        this.availableTickets = availableTickets;
+    }
+
+    public void setTicketPrice(Double ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public void setHotEvent(Boolean hotEvent) {
+        isHotEvent = hotEvent;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
     // Builder Class
     public static class Builder {
         private Long id;
         private String eventName;
         private String description;
         private String location;
-        private LocalDateTime date;
+        private LocalDateTime date=LocalDateTime.now();
         private Integer availableTickets;
         private Double ticketPrice;
         private Boolean isHotEvent;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
+        private LocalDateTime createdAt = LocalDateTime.now();
+        private LocalDateTime updatedAt = LocalDateTime.now();
 
         public Builder() {}
 
@@ -83,7 +116,7 @@ public class Event {
         }
 
         public Builder date(LocalDateTime date) {
-            this.date = date;
+            this.date = date != null ? date : LocalDateTime.now();
             return this;
         }
 
@@ -103,12 +136,12 @@ public class Event {
         }
 
         public Builder createdAt(LocalDateTime createdAt) {
-            this.createdAt = createdAt;
+            this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
             return this;
         }
 
         public Builder updatedAt(LocalDateTime updatedAt) {
-            this.updatedAt = updatedAt;
+            this.updatedAt = updatedAt != null ? updatedAt : LocalDateTime.now();
             return this;
         }
 

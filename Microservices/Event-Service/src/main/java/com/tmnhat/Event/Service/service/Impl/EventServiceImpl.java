@@ -6,7 +6,9 @@ import com.tmnhat.Event.Service.repository.EventDAO;
 import com.tmnhat.Event.Service.service.EventService;
 import com.tmnhat.common.exception.DatabaseException;
 import com.tmnhat.common.exception.ResourceNotFoundException;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,18 +18,22 @@ import java.util.Optional;
 public class EventServiceImpl implements EventService {
     @Autowired
     private EventDAO eventDAO;
-//    private final EventCacheService eventCacheService= new EventCacheService();
     @Autowired
     private EventCacheService eventCacheService;
-
+    @PostConstruct
+    public void checkInjection() {
+        System.out.println("EventCacheService injected in EventServiceImpl: " + (eventCacheService != null));
+    }
     @Override
     public void addEvent(Event event) {
+        System.out.println("Adding event: " + event);
         try {
             Long eventId = eventDAO.addEventAndReturnId(event); // Thêm sự kiện vào DB
             event.setId(eventId); // Gán ID sau khi lưu
 
             // Nếu là hot event, cache vào Redis
             if (event.getIsHotEvent()) {
+
                 eventCacheService.cacheHotEvent(event);
             }
         } catch (Exception e) {
@@ -39,7 +45,6 @@ public class EventServiceImpl implements EventService {
     public List<Event> getAllEvents() {
         try {
             List<Event> events = new ArrayList<>();
-            events.addAll(eventCacheService.getAllHotEvents()); // Lấy sự kiện hot từ cache
             events.addAll(eventDAO.getAllEvents()); // Lấy từ DB
             return events;
         } catch (Exception e) {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.tmnhat.Event.Service.config.RedisConnection;
 import com.tmnhat.Event.Service.model.Event;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+@Primary
 @Service
 public class EventCacheService {
     private static final String HOT_EVENT_KEY = "hot_events";

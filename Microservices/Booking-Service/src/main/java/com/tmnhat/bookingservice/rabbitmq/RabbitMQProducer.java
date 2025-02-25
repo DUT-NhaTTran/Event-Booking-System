@@ -10,27 +10,24 @@ import com.tmnhat.common.config.RabbitMQConnection;
 import java.nio.charset.StandardCharsets;
 
 public class RabbitMQProducer {
-    private final String queueName;
-    private final String exchangeName;
-    private final String routingKey;
+    private static final String queueName;
+    private static final String exchangeName;
+    private static final String routingKey;
 
-    private final RabbitMQConfig config;
-    private final ObjectMapper objectMapper;
-    private final Channel channel;
+    private static final RabbitMQConfig config;
+    private static final ObjectMapper objectMapper;
+    private static final Channel channel;
 
-    public RabbitMQProducer(){
-        config = new RabbitMQConfig();
-        this.queueName = config.getPaymentQueue();
-        this.exchangeName = config.getPaymentExchange();
-        this.routingKey = config.getPaymentRoutingKey();
-
-        // Khởi tạo ObjectMapper và đăng ký module cho xử lý LocalDateTime
+    static{
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-
-        // Lấy channel từ RabbitMQConnection
-        channel = RabbitMQConnection.getChannel();
+        channel= RabbitMQConnection.getChannel();
+        config = new RabbitMQConfig();
+        exchangeName=config.getPaymentExchange();
+        routingKey=config.getPaymentRoutingKey();
+        queueName=config.getPaymentQueue();
     }
+
 
     public static void sendBookingToPayment(Booking booking) {
         try {

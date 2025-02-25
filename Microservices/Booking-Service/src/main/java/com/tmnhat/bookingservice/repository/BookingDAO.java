@@ -75,7 +75,7 @@ public class BookingDAO extends BaseDAO {
         }
     }
 
-    public void updateBooking(Long id, Booking booking) throws SQLException {
+    public void updateBooking(Long id, Booking booking) {
         String updateBooking = "UPDATE booking SET booking_name = ?, event_id= ?, user_id = ?, ticket_count = ?, status = ?, created_at = ? WHERE id = ?";
         int rowsAffected=executeUpdate(updateBooking, stmt -> {
             stmt.setString(1, booking.getBookingName());

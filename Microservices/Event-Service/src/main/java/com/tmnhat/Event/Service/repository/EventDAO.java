@@ -3,6 +3,7 @@ package com.tmnhat.Event.Service.repository;
 import com.tmnhat.Event.Service.model.Event;
 import com.tmnhat.common.exception.DatabaseException;
 import com.tmnhat.common.exception.ResourceNotFoundException;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -20,6 +21,7 @@ public class EventDAO extends BaseDAO {
                 """;
 
         try {
+            System.out.println("INSERTING into DB: " + event.getEventName());
             return executeQuery(addEventSQL, stmt -> {
                 stmt.setString(1, event.getEventName());
                 stmt.setString(2, event.getDescription());
@@ -28,8 +30,10 @@ public class EventDAO extends BaseDAO {
                 stmt.setInt(5, event.getAvailableTickets());
                 stmt.setDouble(6, event.getTicketPrice());
                 stmt.setBoolean(7, event.getIsHotEvent());
-                stmt.setTimestamp(8, Timestamp.valueOf(event.getCreatedAt()));
-                stmt.setTimestamp(9, Timestamp.valueOf(event.getUpdatedAt()));
+                LocalDateTime now = LocalDateTime.now();
+                stmt.setTimestamp(8, event.getCreatedAt() != null ? Timestamp.valueOf(event.getCreatedAt()) : Timestamp.valueOf(now));
+                stmt.setTimestamp(9, event.getUpdatedAt() != null ? Timestamp.valueOf(event.getUpdatedAt()) : Timestamp.valueOf(now));
+
 
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
